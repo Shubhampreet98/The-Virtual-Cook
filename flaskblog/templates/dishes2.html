@@ -1,0 +1,101 @@
+{%extends "layout.html"%}
+{% block content%}
+
+
+<script>
+    
+    $(document).ready(function(){
+        $("#search").on("input",function(e){
+            textinlivebox = $("#search").val();
+            $("#dishlist").empty();
+            $.ajax({
+                method:"post",
+                url:"/livesearch",
+                data:{text:textinlivebox},
+                success:function(res){
+                    var data = "<dl>";
+                    $.each(res,function(index,value){
+                        data += "<dd>"+value+"</dd>";
+                    });
+                    data += "</dl>";
+                    $("#dishlist").html(data);
+                }
+            });
+        });
+    });
+</script>
+
+<div class="content-section">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Search Dishes</legend>
+    
+            <div class="form-group">
+                {{ form.search.label(id ="form-control-label") }}
+                
+    
+                {% if form.search.errors %}
+                    {{ form.search(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.search.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+            {% else %}
+                {{ form.search(class="form-control form-control-lg") }}
+            {% endif %}
+            <p id = "dishlist" >
+                
+            </div>
+            
+            <div class="form-check">
+                {{ form.save(class='form-check-input')}}
+                {{ form.save.label(class='form-check-label')}}
+            </div>
+            
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+            
+            
+            
+    </form>
+   
+    
+
+</div>
+<article class="media content-section">
+<div class= "print">
+    <img class="rounded-circle account-img" src= {{ image_file1 }} alt= "Dish">
+    <!--<div class="rate">
+        <input type="radio" id="star1" name="rating" value="1">
+        <input type="radio" id="star2" name="rating" value="2">
+        <input type="radio" id="star3" name="rating" value="3">
+        <input type="radio" id="star4" name="rating" value="4">
+        <input type="radio" id="star5" name="rating" value="5">-->
+    <h2>Dish: {{ data1 }} </h2>
+    <br>
+    <p>Ingredients: </br>{{ data2 }}</p>
+    <p> Time: </br> {{ data3 }}</p>
+    <p> Steps: </br> {{ data4 }}</p>
+    
+</div>
+</article>
+
+
+{% for (i,p) in y %} 
+<article class="media content-section">
+<div class= "more-print">
+    <img class="rounded-circle account-img" src= {{ p }} alt= "Dish">
+    <h2>Dish: {{i[0]}} </h2>
+    <br>
+    <p>Ingredients: </br>{{i[1]}}</p>
+    <p>Time: </br> {{i[2]}}</p>
+    <p>Steps: </br> {{i[3]}}</p>
+</div>
+</article>
+{% endfor %}
+
+{% endblock content%}
